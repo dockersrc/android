@@ -18,20 +18,25 @@ is identical across projects does.
 | Android build-tools | `35.0.0` | via `sdkmanager` |
 | Android NDK | `27.3.13750724` (r27d LTS) | via `sdkmanager`, for native/JNI builds |
 | CMake | `3.31.6` | via `sdkmanager`, for native/JNI builds |
-| Gradle | `8.14.5` | wrapper distribution pre-warmed into `$GRADLE_USER_HOME` so `./gradlew` never re-downloads it |
+| Gradle | `8.14.5` | wrapper distribution pre-warmed into `$GRADLE_USER_HOME` (hashed dist dir, `.ok` marker) so `./gradlew` never re-downloads it; also linked as `/usr/local/bin/gradle` |
 | GitHub CLI | `gh` | from the official apt repo, for release/CI steps that shell out to `gh` |
+| GitLab CLI | `glab` `1.131.0` | official release tarball, SHA-256 verified |
+| Gitea CLI | `tea` `0.16.0` | official release binary, SHA-256 verified |
+
+The NDK and SDK CMake only ship Linux x86_64 host binaries, so they are
+installed on the `linux/amd64` image only; the `linux/arm64` image omits them.
 
 `ANDROID_HOME` / `ANDROID_SDK_ROOT` default to `/opt/android-sdk`.
 `GRADLE_USER_HOME` defaults to `/root/.gradle`. All of the above are
 overridable at build time via `--build-arg` (see `Dockerfile` for the full
 `ARG` list and defaults: `ANDROID_CMDLINE_TOOLS_VERSION`,
 `ANDROID_PLATFORM_VERSIONS`, `ANDROID_BUILD_TOOLS_VERSION`,
-`ANDROID_NDK_VERSION`, `ANDROID_CMAKE_VERSION`, `GRADLE_VERSION`).
+`ANDROID_NDK_VERSION`, `ANDROID_CMAKE_VERSION`, `GRADLE_VERSION`, `GLAB_VERSION`, `TEA_VERSION`).
 
 ### How it's built
 
 - `PACK_LIST` (wired from `ENV_PACKAGES` in `.env.scripts`) installs
-  `wget unzip git curl gnupg` from the base distro's own repos — the minimum
+  `wget unzip git curl gnupg xz-utils` from the base distro's own repos — the minimum
   needed to fetch and unpack everything else. `ca-certificates` is already
   installed by the base template before `PACK_LIST` runs.
 - `rootfs/root/docker/setup/02-packages.sh` adds the Adoptium Temurin and

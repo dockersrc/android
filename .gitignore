@@ -212,6 +212,7 @@ htmlcov/
 ### Misc — always allow ###
 !*/README*
 !inc/main.bash
+!rootfs/usr/local/etc/docker/env/
 
 ### Project-specific patterns ###
 # ignore commit message files
@@ -239,4 +240,3 @@ htmlcov/
 **/*.local.conf
 **/*.local.yaml
 **/*.local.yml
-
